@@ -1,0 +1,50 @@
+version: '3.3'
+
+services:
+
+  master:
+    build:
+      context: ./tnginx
+      args:
+        WHO: MASTER
+        WEBPORT: 81
+    # ports:
+    #  - "8880:81"
+    container_name: keepalived_master
+    networks: 
+      static-network:
+        ipv4_address: 10.3.3.11
+    cap_add:
+      - NET_ADMIN
+
+  backup:
+    build:
+      context: ./tnginx
+      args:
+         WHO: BACKUP
+         WEBPORT: 81
+    # ports:
+    #  - "8881:81"
+    container_name: keepalived_backup
+    networks: 
+      static-network:
+        ipv4_address: 10.3.3.12
+    cap_add:
+      - NET_ADMIN
+
+  proxy:
+    build:
+      context: ./thaproxy
+    ports:
+      - 8000:6301
+    container_name: keepalived_proxy
+    networks:
+      - static-network
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 10.3.3.0/24
+
+   

@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# Copy-pasteable onliner 
+sudo cat /var/log/auth.log | grep ' sudo:.*; COMMAND=' | sed 's/COMMAND=//' | awk -F' ; ' '{ print $1,$4 }' | awk '!($1="")!($2="")!($3="")!($4="")!($5="")!($7="")!($8="")' | sort | uniq -c | sort -nr | awk '!_[$2]++' | awk '($2=$2":")'|awk '!($1="")'
+#01                          02                          03                   04                              05                                                               06     07        08         09               10               11 
+
+# Less ugly view, can be a valid script when uncommented 
+# sudo cat /var/log/auth.log                                     |
+# grep ' sudo:.*; COMMAND='                                      |
+# sed 's/COMMAND=//'                                             |
+# awk -F' ; ' '{ print $1,$NF }'                                 |
+# awk '!($1="")!($2="")!($3="")!($4="")!($5="")!($7="")!($8="")' |
+# sort                                                           |
+# uniq -c                                                        |
+# sort -nr                                                       |
+# awk  '!_[$2]++'                                                |
+# awk '($2=$2":")'                                               |
+# awk  '!($1="")'
+
+
+# Explaination by commands:
+#
+#     01 sudo is implied to access root owned log file, obviously not r
+#        equired if run as root.
+#        just FYI: cat used intentionally, it is not a useless here 
+#
+#     02 select entries  that match log record of sudo event format
+#
+#     03 suppressing the first occurrence of 'COMMAND=' as we only need 
+#        the part right to equal sign for the report
+#
+#     04 using ' ; ' (3 symbols) as a delimiter, retrieving 1st and last 
+#        column of the output, purging columns in between
+#        the last column is the command, the first one contains user name, 
+#        but needs some further processing below to retrieve it
+#
+#     05 now using std field delimiter of awk, we suppress irrelevant columns 
+#        around column 6 which is the user name, 
+#        we cannot just extract user name and command since the command can 
+#        have an arbitrary number of options and/or arguments,
+#        that is why suppressing not required fields instead of
+#        extracting required ones
+#
+#     06 sort by user since the next uniq command likes sorted input to work 
+#        properly
+#
+#     07 counts the duplicates to aggregate commands by usage
+#
+#     08 since the first column is now a count of command runs, need 
+#        to sort it numerically and in reversed order to get 
+#        the bigger number to top
+#
+#     09 it's actually deduplication by user (2nd column) only, this way the 
+#        top entry only is left for each user name
+#
+#     10 adding colon to match the expected output :)
+#
+#     11 purge the 1st column which is the highest number of times 
+#        calculated in 07, you may want to keep it though, 
+#        to know how many times exactly the most used command was executed 
+
+# NOTE1:
+# In case there are several commands that were run by a user an equal number 
+# of times only one of those gets in list, 
+# which I assume is acceptable as it matches the expected output, 
+# though does not strictly mean 'most' used.
+
+# NOTE2:
+# log entries for sudo failed due to permission issues 
+# will be probably missed or misreported, not tested completely though
+# 

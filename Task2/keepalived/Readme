@@ -1,0 +1,14 @@
+Steps required:
+
+1. docker-compose build
+1. docker-compose up
+
+haproxy included
+single entry url: http://localhost:8000
+
+
+docker host assumed to have 
+kernel parameter
+net.ipv4.ip_nonlocal_bind=1
+
+
