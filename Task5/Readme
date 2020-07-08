@@ -1,0 +1,44 @@
+Script downloads dump files from wikipedia site.
+
+Usage: 
+
+./bitcoinhits.py YYYY MM DD HH 
+
+All paramters are optional,
+if no parameters given, all data available in 2016 retrived by default
+CAUTION, one wikipedia gz dump file contains data from one hour,  
+processing time is around 1 minute per file
+Console output updated on each file.
+
+
+
+By specifying additionaly month, day and hour the scope  narrowed to that values
+
+Examples:
+
+   ./bitcoinhits.py 2016 01           # January the 2016, the whole month
+
+   ./bitcoinhits.py 2015 06 29        # July, the 29th 2015, the whole day
+
+   ./bitcoinhits.py 2015 10 10 10     # October the 10th 2015, the 10th hour  (10:00 .. 10:59)
+
+
+
+  
+OUTPUT SAMPLE:
+
+time ./bitcoinhits.py 2015 02 10 23
+2015
+Procesing stastics for term Bitcoin in domain en
+Getting https://dumps.wikimedia.org/other/pagecounts-raw/2015/2015-02/pagecounts-20150210-230000.gz ... 
+Hits in 2015-02-10 during the hour:23 -   339
+Grand total:                              339 
+
+real	0m59.325s
+user	0m12.229s
+sys	0m2.456s
+
+
+
+
+ 
