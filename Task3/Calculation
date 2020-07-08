@@ -1,0 +1,57 @@
+Task 3
+Calculate what would be the LCU capacity and the monthly cost for operating an AWS Application Load Balancer in
+Frankfurt region with the following details:
+• 26.6 new connections / s
+• 27 active connections / s (each connection lasting 50 ms)
+• processed 15 000 000 Bytes per minute
+
+==================
+
+
+APPROACH:
+
+Following the link:
+https://aws.amazon.com/elasticloadbalancing/pricing/
+
+we can find tarif for EU FFM:
+
+$0.027 per Application Load Balancer-hour (or partial hour)
+$0.008per LCU-hour (or partial hour)
+
+
+
+Then substitute our values in the calculation examples of first 3  dimensions
+
+
+
+UA EAST tarif
+$0.0225 per Application Load Balancer-hour (or partial hour)
+$0.008per LCU-hour (or partial hour)
+
+
+DIMENSION 1
+
+  New connections (per second): Each LCU provides 25 new connections per second (averaged over the hour). 
+  Since your application receives 26.6 new connection per second, 
+  this translates to 1.064 LCUs (26.6 connection per second / 25 connections per second)
+
+DIMENSION 2
+
+Active connections (per minute): Each LCU provides 3,000 active connections per minute. 
+Your application receives 26.6 new connection per second, each lasting 50 ms. 
+This translates to  0.000665 active connections per minute, or 0.000000222 LCUs 
+(0.000665 active connections per minute / 3,000 active connections per minute)
+
+DIMENSION 3
+
+Processed Bytes (GBs per hour): Each LCU provides 1 GB of processed bytes per hour. 
+Since each the total processed given is 15000000, or ~ 15MB , 
+it translates to 0.015 GB per hour or 0.015 LCUs (15 MB/1 GB).
+
+
+since there is no number of Rule Evaluation given, we do not know how to calculate DIMENSION4, so we have to omit it.
+
+From the 3 above the New Connection LCU is the biggest, thus is selected
+
+1.064 LCU  * 0.008 per LCU = $0.008512 per hour or $6.12864 per month
+
